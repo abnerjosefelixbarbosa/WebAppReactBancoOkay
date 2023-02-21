@@ -1,5 +1,5 @@
-import { FormularioLogin } from '../../components/FormularioLogin';
-import './Login.css';
+import { FormularioLogin } from '../components/FormularioLogin';
+import './Login.css'
 
 export const Login = () => {
     return(

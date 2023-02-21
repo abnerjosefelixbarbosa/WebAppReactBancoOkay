@@ -1,0 +1,18 @@
+.container_login {
+    margin: 300px;
+    border: 1px solid slateblue;
+    border-radius: 10px;
+    padding: 24px;
+    background-color: white;
+}
+
+.titulo {
+    background-color: slateblue;
+    color: white;
+}
+
+.center {
+    display: flex;
+	align-items: center;
+	justify-content: center;
+}

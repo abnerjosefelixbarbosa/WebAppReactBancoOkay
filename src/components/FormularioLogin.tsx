@@ -1,46 +1,86 @@
-import {
-  Button,
-  Container,
-  FormControl,
-  FormHelperText,
-  Input,
-  InputLabel,
-  TextField,
-} from "@mui/material";
+import { Button, Container, TextField } from "@mui/material";
 import { useState } from "react";
+import { useIMask } from "react-imask";
+import { Cliente } from './../model/Cliente';
+
+const MascaraSenhaCliente = () => {
+  const [optsSenhaCliente, setOptsSenhaCliente] = useState({
+    mask: String("000000"),
+  });
+  const {
+    ref,
+    maskRef,
+    value,
+    setValue,
+    unmaskedValue,
+    setUnmaskedValue,
+    typedValue,
+    setTypedValue,
+  } = useIMask(optsSenhaCliente);
+
+  return ref;
+};
+
+const MascaraCpf = () => {
+  const [optsCpf, setOptsSenhaCliente] = useState({
+    mask: String("000.000.000-00"),
+  });
+  const {
+    ref,
+    maskRef,
+    value,
+    setValue,
+    unmaskedValue,
+    setUnmaskedValue,
+    typedValue,
+    setTypedValue,
+  } = useIMask(optsCpf);
+
+  return ref;
+};
 
 export const FormularioLogin = () => {
-  const [cpf, setCPF] = useState(String);
-  const [senhaCliente, setSenhaCliente] = useState(String);
+  const refCpf = MascaraCpf()
+  const refSenhaCliente = MascaraSenhaCliente()
 
   const login = (e: any) => {
-    e.preventDefault();
-    console.log(cpf, senhaCliente);
-  };
+    e.preventDefault()
+    const cliente: Cliente = {
+      cpf: refCpf.current?.value,
+      senhaCliente: refSenhaCliente.current?.value,
+    }
+
+    console.log(cliente)
+  }
 
   return (
     <>
-      <Container maxWidth='xs'>
+      <Container className="container_login" maxWidth="xs">
+        <div className="center titulo">
+          <h1>Login</h1>
+        </div>
         <form onSubmit={login}>
           <div>
-            <label htmlFor="cpf">
-                CPF:
-            </label>
             <TextField
               fullWidth
-              value={cpf}
-              onChange={(e) => setCPF(e.target.value)}
+              label="cpf"
+              id="cpf"
+              size="small"
+              variant="filled"
+              type={"text"}
+              inputRef={refCpf}
             />
           </div>
           <br />
           <div>
-            <label htmlFor="senha_cliente">
-                Senha Do Cliente:
-            </label>
             <TextField
               fullWidth
-              value={senhaCliente}
-              onChange={(e) => setSenhaCliente(e.target.value)}
+              label="senha"
+              id="senha"
+              size="small"
+              variant="filled"
+              type={"text"}
+              inputRef={refSenhaCliente}
             />
           </div>
           <br />
