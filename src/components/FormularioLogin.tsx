@@ -1,7 +1,8 @@
-import { Button, Container, TextField } from "@mui/material";
+import { Alert, Button, Container, IconButton, TextField } from "@mui/material";
 import { useState } from "react";
 import { useIMask } from "react-imask";
-import { Cliente } from './../model/Cliente';
+import { cpfValidation, senhaClienteValidation } from "../utils/Validation";
+import { Cliente } from "./../model/Cliente";
 
 const MascaraSenhaCliente = () => {
   const [optsSenhaCliente, setOptsSenhaCliente] = useState({
@@ -40,18 +41,23 @@ const MascaraCpf = () => {
 };
 
 export const FormularioLogin = () => {
-  const refCpf = MascaraCpf()
-  const refSenhaCliente = MascaraSenhaCliente()
+  const refCpf = MascaraCpf();
+  const refSenhaCliente = MascaraSenhaCliente();
 
   const login = (e: any) => {
-    e.preventDefault()
-    const cliente: Cliente = {
-      cpf: refCpf.current?.value,
-      senhaCliente: refSenhaCliente.current?.value,
-    }
+    e.preventDefault();
 
-    console.log(cliente)
-  }
+    if (!cpfValidation(refCpf.current?.value)) {
+      let mensagem: any = document.getElementById("mensagem_cpf");
+      mensagem.innerHTML = "cpf invalido";
+      document.getElementById("error_cpf")?.classList.remove("esconder");
+      setTimeout(() => {        
+        document.getElementById("error_cpf")?.classList.add("esconder");
+      }, 3000)
+    }
+    if (!senhaClienteValidation(refSenhaCliente.current?.value))
+      console.log("senha invalido");
+  };
 
   return (
     <>
@@ -66,19 +72,23 @@ export const FormularioLogin = () => {
               label="cpf"
               id="cpf"
               size="small"
-              variant="filled"
+              variant="standard"
               type={"text"}
               inputRef={refCpf}
             />
           </div>
-          <br />
+          <div id="error_cpf" className="esconder">
+            <Alert severity="error" id="id_error_cpf">
+              <span id="mensagem_cpf"></span>
+            </Alert>
+          </div>
           <div>
             <TextField
               fullWidth
               label="senha"
               id="senha"
               size="small"
-              variant="filled"
+              variant="standard"
               type={"text"}
               inputRef={refSenhaCliente}
             />

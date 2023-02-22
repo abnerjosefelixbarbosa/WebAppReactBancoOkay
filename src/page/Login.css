@@ -11,6 +11,10 @@
     color: white;
 }
 
+.esconder {
+    display: none;
+}
+
 .center {
     display: flex;
 	align-items: center;
