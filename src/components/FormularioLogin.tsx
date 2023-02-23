@@ -43,20 +43,20 @@ const MascaraCpf = () => {
 export const FormularioLogin = () => {
   const refCpf = MascaraCpf();
   const refSenhaCliente = MascaraSenhaCliente();
+  const error_cpf = document.getElementById("error_cpf");
+  const error_senha = document.getElementById("error_senha");
+  const rCpfValidation = cpfValidation(refCpf.current?.value);
+  const rSenhaClienteValidation = senhaClienteValidation(
+    refSenhaCliente.current?.value
+  );
 
   const login = (e: any) => {
     e.preventDefault();
 
-    if (!cpfValidation(refCpf.current?.value)) {
-      let mensagem: any = document.getElementById("mensagem_cpf");
-      mensagem.innerHTML = "cpf invalido";
-      document.getElementById("error_cpf")?.classList.remove("esconder");
-      setTimeout(() => {        
-        document.getElementById("error_cpf")?.classList.add("esconder");
-      }, 3000)
-    }
-    if (!senhaClienteValidation(refSenhaCliente.current?.value))
-      console.log("senha invalido");
+    if (!rCpfValidation) error_cpf?.classList.remove("hidden");
+    else error_cpf?.classList.add("hidden");
+    if (!rSenhaClienteValidation) error_senha?.classList.remove("hidden");
+    else error_senha?.classList.add("hidden");
   };
 
   return (
@@ -77,21 +77,22 @@ export const FormularioLogin = () => {
               inputRef={refCpf}
             />
           </div>
-          <div id="error_cpf" className="esconder">
-            <Alert severity="error" id="id_error_cpf">
-              <span id="mensagem_cpf"></span>
-            </Alert>
+          <div id="error_cpf" className="hidden">
+            <Alert severity="error">CPF invalido.</Alert>
           </div>
           <div>
             <TextField
               fullWidth
-              label="senha"
+              label="senha do cliente"
               id="senha"
               size="small"
               variant="standard"
               type={"text"}
               inputRef={refSenhaCliente}
             />
+          </div>
+          <div id="error_senha" className="hidden">
+            <Alert severity="error">Senha invalida.</Alert>
           </div>
           <br />
           <div>
