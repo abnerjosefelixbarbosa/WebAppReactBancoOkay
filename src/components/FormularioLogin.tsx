@@ -58,7 +58,6 @@ export const FormularioLogin = () => {
     e.preventDefault();
     const rCpfValido = rClienteValidation.cpfValido();
     const rSenhaValida = rClienteValidation.senhaValida();
-    //fecharError();
     //949.612.154-30
     //481228
 
@@ -94,14 +93,6 @@ export const FormularioLogin = () => {
     }
 
     console.log(cliente);
-  };
-
-  const fecharError = () => {
-    setTimeout(() => {
-      error_1?.classList.add("hidden");
-      error_2?.classList.add("hidden");
-      error_3?.classList.add("hidden");
-    });
   };
 
   return (
