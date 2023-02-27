@@ -13,4 +13,5 @@ export interface Cliente {
 	bairro?: String;
 	cidade?: String;
 	estado?: String;
+	erros?: Array<any>;
 }
