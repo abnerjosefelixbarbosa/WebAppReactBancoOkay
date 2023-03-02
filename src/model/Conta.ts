@@ -7,4 +7,5 @@ export interface Conta {
 	saldo?: number;
 	senhaConta?: string;
 	cliente?: Cliente;
+	erro?: String;
 }

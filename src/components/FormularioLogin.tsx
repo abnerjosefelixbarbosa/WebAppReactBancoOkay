@@ -1,8 +1,7 @@
-import { Alert, Button, Container, IconButton, TextField } from "@mui/material";
+import { Alert, Button, Container, TextField } from "@mui/material";
 import { useState } from "react";
 import { useIMask } from "react-imask";
-import { clienteService } from "../service/ClienteSercice";
-import { clienteValidation } from "../utils/ClienteValidation";
+import { ContaController } from "../controller/ContaController";
 import { Cliente } from "./../model/Cliente";
 
 const MascaraSenhaCliente = () => {
@@ -22,7 +21,6 @@ const MascaraSenhaCliente = () => {
 
   return ref;
 };
-
 const MascaraCpf = () => {
   const [optsCpf, setOptsSenhaCliente] = useState({
     mask: String("000.000.000-00"),
@@ -48,58 +46,56 @@ export const FormularioLogin = () => {
     cpf: refCpf.current?.value,
     senhaCliente: refSenhaCliente.current?.value,
   };
-  const rClienteValidation = clienteValidation(cliente);
-  const rClienteService = clienteService(cliente);
   const error_1 = document.getElementById("error_1");
   const error_2 = document.getElementById("error_2");
   const error_3 = document.getElementById("error_3");
+  const error_4 = document.getElementById("error_4");
+  const cc = ContaController();
 
   const login = (e: any) => {
     e.preventDefault();
-    const rCpfValido = rClienteValidation.cpfValido();
-    const rSenhaValida = rClienteValidation.senhaValida();
     //949.612.154-30
     //481228
 
-    if (rCpfValido === 1) {
-      error_1?.classList.remove("hidden");
-    } else {
+    cc.login(cliente).then((value) => {
+      if (value === "cpf invalido") {
+        error_1?.classList.remove("hidden");
+        fechar();
+      } else if (value === "senha vazia") {
+        error_2?.classList.remove("hidden");
+        fechar();
+      } else if (value.erro === "cpf invalido") {
+        error_1?.classList.remove("hidden");
+        fechar();
+      } else if (value.erro === "cliente não encontrado") {
+        error_3?.classList.remove("hidden");
+        fechar();
+      } else if (value.erro === "erro no servidor") {
+        error_4?.classList.remove("hidden");
+        fechar();
+      } else {
+        console.log(value);
+      }
+    });
+  };
+
+  const fechar = () => {
+    setTimeout(() => {
       error_1?.classList.add("hidden");
-    }
-
-    if (rSenhaValida === 1) {
-      error_2?.classList.remove("hidden");
-    } else {
       error_2?.classList.add("hidden");
-      rClienteService.procurarCpfSenhaCliente().then((data) => {
-        cliente.id = data.id;
-        cliente.nome = data.nome;
-        cliente.rg = data.rg;
-        cliente.email = data.email;
-        cliente.dataNascimento = data.dataNascimento;
-        cliente.numero = data.numero;
-        cliente.cep = data.cep;
-        cliente.logradouro = data.logradouro;
-        cliente.bairro = data.bairro;
-        cliente.cidade = data.cidade;
-        cliente.estado = data.estado;
-        cliente.erros = data.erros;
-        if (cliente.id === null) {
-          error_3?.classList.remove("hidden");
-        } else {
-          error_3?.classList.add("hidden");
-        }
-      });
-    }
-
-    console.log(cliente);
+      error_3?.classList.add("hidden");
+      error_4?.classList.add("hidden");
+    }, 2000);
   };
 
   return (
     <>
       <Container className="container_login" maxWidth="xs">
         <div id="error_3" className="hidden">
-          <Alert severity="error">Cliente não encontrado</Alert>
+          <Alert severity="error">cliente não encontrado</Alert>
+        </div>
+        <div id="error_4" className="hidden">
+          <Alert severity="error">erro no servidor</Alert>
         </div>
         <div className="center titulo">
           <h1>Login</h1>
@@ -117,7 +113,7 @@ export const FormularioLogin = () => {
             />
           </div>
           <div id="error_1" className="hidden">
-            <Alert severity="error">CPF invalido</Alert>
+            <Alert severity="error">cpf invalido</Alert>
           </div>
           <div>
             <TextField
@@ -131,7 +127,7 @@ export const FormularioLogin = () => {
             />
           </div>
           <div id="error_2" className="hidden">
-            <Alert severity="error">Senha invalido</Alert>
+            <Alert severity="error">senha vazia</Alert>
           </div>
           <br />
           <div>
